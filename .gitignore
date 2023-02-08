@@ -1,0 +1,4 @@
+*.txt
+target
+.apt_*
+data
