@@ -19,6 +19,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
@@ -65,6 +67,10 @@ public class Agg
             List<CompositeValuesSourceBuilder<?>> sourceBuilderList = new ArrayList<>();
             sourceBuilderList.add(new TermsValuesSourceBuilder("rec_no").field(fieldName));
             CompositeAggregationBuilder compositeAggregationBuilder = AggregationBuilders.composite("rec_nos", sourceBuilderList).size(pageSize);
+
+            RangeQueryBuilder rangeQueryBuilder = QueryBuilders.rangeQuery("timestamp").from("2022-07-01").to("2022-07-03");
+
+            searchSourceBuilder.query(rangeQueryBuilder);
             searchSourceBuilder.aggregation(compositeAggregationBuilder);
             searchSourceBuilder.size(0);
             searchRequest.source(searchSourceBuilder);
